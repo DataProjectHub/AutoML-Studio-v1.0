@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AutoML Studio | Health Score Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f8ff, #dfefff);
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #004080;
+            margin-bottom: 30px;
+        }
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .form-group {
+            flex: 1 1 200px;
+            min-width: 180px;
+            max-width: 220px;
+        }
+        label {
+            font-weight: bold;
+            color: #003366;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            padding: 6px;
+            width: 100px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .note {
+            width: 100%;
+            font-size: 12px;
+            color: #555;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .submit-button {
+            width: 100%;
+            text-align: center;
+            margin-top: 10px;
+        }
+        input[type="submit"] {
+            padding: 10px 30px;
+            background-color: #0066cc;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #004080;
+        }
+        .result-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .result {
+            font-size: 18px;
+            color: #333;
+            background-color: #e6f2ff;
+            padding: 15px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+    </style>
+    <script>
+        function calculateBMI() {
+            const weight = parseFloat(document.getElementById("weight").value);
+            const height = parseFloat(document.getElementById("height").value);
+            if (weight > 0 && height > 0) {
+                const bmi = weight / ((height / 100) ** 2);
+                document.getElementById("BMI").value = bmi.toFixed(2);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>AutoML Studio — Health Score Demo</h2>
+    <form method="post" action="/predict">
+        <div class="form-group"><label>Age:</label>
+            <input type="number" step="any" name="Age" required>
+        </div>
+        <div class="form-group"><label>Weight (kg):</label>
+            <input type="number" step="any" id="weight" oninput="calculateBMI()">
+        </div>
+        <div class="form-group"><label>Height (cm):</label>
+            <input type="number" step="any" id="height" oninput="calculateBMI()">
+        </div>
+        <div class="form-group"><label>BMI:</label>
+            <input type="number" step="any" name="BMI" id="BMI" required>
+        </div>
+        <div class="form-group"><label>Exercise Frequency (days/week):</label>
+            <input type="number" name="Exercise_Frequency" required>
+        </div>
+        <div class="form-group"><label>Diet Quality (0-100):</label>
+            <input type="number" step="any" name="Diet_Quality" required>
+        </div>
+        <div class="form-group"><label>Sleep Hours:</label>
+            <input type="number" step="any" name="Sleep_Hours" required>
+        </div>
+        <div class="form-group"><label>Smoking Status (0 = Non-Smoker, 1 = Smoker):</label>
+            <input type="number" name="Smoking_Status" required>
+        </div>
+        <div class="form-group"><label>Alcohol Consumption (units/week):</label>
+            <input type="number" step="any" name="Alcohol_Consumption" required>
+        </div>
+
+        <div class="note">BMI will be auto-calculated if Weight and Height are provided.</div>
+
+        <div class="submit-button">
+            <input type="submit" value="Predict Health Score">
+        </div>
+    </form>
+
+    <div class="result-section">
+        {% if result is defined %}
+            <div class="result">
+                <strong>Predicted Health Score:</strong><br>{{ result }}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+data_path: data/raw/synthetic_health_data.csv
+target_column: Health_Score
+test_size: 0.2
+random_state: 42
+
+preprocessing:
+  scale_numerical: True
+  encode_categoricals: True
+
+model_selection:
+  models: ["LinearRegression", "RandomForest", "XGBoost"]
+  cv_folds: 5
+  scoring: "neg_root_mean_squared_error"
+
