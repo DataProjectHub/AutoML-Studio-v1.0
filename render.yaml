@@ -1,7 +1,7 @@
 services:
   - type: web
     name: automl-studio
-    env: python
+    runtime: python
     plan: free
-    buildCommand: pip install -r requirements.txt && python main.py
-    startCommand: uvicorn streamlit_app.app:app --host 0.0.0.0 --port $PORT
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run streamlit_app/automl_dashboard.py --server.address 0.0.0.0 --server.port $PORT --server.headless true
