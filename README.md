@@ -1,54 +1,103 @@
-# AutoML Studio — Automated Regression & Model Evaluation Platform
+# AutoML Studio v1.0
+### Automated Regression & Model Evaluation Platform
 
-AutoML Studio is an end-to-end, configurable regression benchmark with automated preprocessing, cross-validated model selection, holdout evaluation, a saved inference pipeline, and a FastAPI prediction form.
+AutoML Studio is an independent machine learning project designed to simplify regression model development through an interactive Streamlit dashboard.
 
-## Project scope
-AutoML Studio is the platform name. The included **Health Score Predictor** is an example regression use case, not a separate general-purpose prediction interface.
+Users can upload CSV datasets, select a numerical target variable, automatically preprocess features, compare regression algorithms, evaluate model performance, and download the best trained pipeline.
 
-## Features
-- CSV ingestion and train/test split from YAML configuration
-- Numeric imputation and scaling; categorical imputation and one-hot encoding
-- Linear Regression, Random Forest, and XGBoost hyperparameter search
-- **Leakage-safe cross-validation:** preprocessing is fitted inside each training fold
-- Winner selected by lowest cross-validation RMSE; final test set used only for evaluation
-- JSON report with RMSE, MAE, R², and model comparison
-- FastAPI prediction form and `/health` endpoint
+## Key Features
 
-## Quick start
+- **CSV Upload:** Upload and preview tabular datasets.
+- **Automated Preprocessing:** Missing-value imputation, numerical scaling, and categorical encoding.
+- **Model Training:** Linear Regression, Random Forest, and Gradient Boosting.
+- **Cross-Validation:** Five-fold cross-validation for model comparison.
+- **Best Model Selection:** Automatically selects the model with the lowest cross-validation RMSE.
+- **Model Evaluation:** R², RMSE, MAE, and actual-versus-predicted results.
+- **Model Export:** Download the trained preprocessing and prediction pipeline as a `.pkl` file.
+
+## Technology Stack
+
+Python | Streamlit | Pandas | NumPy | Scikit-learn | Joblib | FastAPI
+
+## Machine Learning Workflow
+
+CSV Dataset → Target Selection → Train/Test Split → Automated Preprocessing → Cross-Validation → Best Model Selection → Test Evaluation → Model Export
+
+Preprocessing is fitted within each cross-validation training fold to reduce data leakage.
+
+## Getting Started
+
+Clone the repository:
+
 ```bash
-python -m venv .venv
-# Activate .venv for your operating system
-pip install -r requirements.txt
-python main.py
-uvicorn streamlit_app.app:app --reload
+git clone https://github.com/DataProjectHub/AutoML-Studio-v1.0.git
+cd AutoML-Studio-v1.0
 ```
-Open http://127.0.0.1:8000. Training may take several minutes depending on your computer.
 
-## Run tests
+Install dependencies:
+
 ```bash
-pytest -q
+python -m pip install -r requirements.txt
 ```
 
-## Configuration
-Edit `automl_core/config/config.yaml` to change the CSV path, target, test split, model list, or cross-validation folds. The included dataset is synthetic health-score data used as a regression demonstration, **not** a clinically validated predictor.
+Launch AutoML Studio:
 
-## Project layout
-- `automl_core/` – data loading, preprocessing, training, evaluation
-- `data/raw/` – example CSV
-- `main.py` – full training workflow
-- `streamlit_app/app.py` – **FastAPI**, despite the legacy folder name
-- `tests/` – smoke and integration tests
-- `reports/metrics.json` – generated metrics
-- `models/best_model.pkl` – generated fitted pipeline (ignored by Git)
+```bash
+python -m streamlit run streamlit_app/automl_dashboard.py
+```
 
-## Deployment
-`render.yaml` trains a model during build and serves FastAPI with Uvicorn. Render build limits and free-tier availability may change; validate on the target host. This example is a demo and has no authentication or production-grade monitoring.
+Open `http://localhost:8501` in your browser.
 
-## Roadmap
-- Rename legacy `streamlit_app` directory to `web_app`
-- Add model registry and experiment tracking
-- Add downloadable batch prediction and data-quality validation
-- Add CI and model drift monitoring
+## Tested Use Cases
 
-## Limitations
-This is a configurable AutoML-style **model search**, not a general-purpose AutoML framework. It supports regression with three model families and assumes the provided features are suitable for prediction.
+**Health Score Regression**
+
+- Dataset: 1,000 records
+- Best model: Linear Regression
+- Test R²: 0.8090
+- Test RMSE: 6.1026
+- Test MAE: 4.6528
+
+These results are from local testing on a demonstration dataset, not clinical validation.
+
+**Bike Sharing Demand**
+
+CSV upload and dataset preview tested with 17,379 records. Full model evaluation remains to be validated, including leakage prevention and time-aware splitting.
+
+## Additional Components
+
+The repository also contains a configurable Python regression pipeline and a FastAPI-based Health Score Predictor demonstration.
+
+These components are separate from the main Streamlit dashboard.
+
+## Current Limitations
+
+- Supports regression, not classification.
+- Requires a numerical target variable.
+- Uses a fixed set of three algorithms in the Streamlit dashboard.
+- Uses a random train/test split, which is not suitable for every dataset.
+- Does not automatically detect identifiers, target leakage, or time-series structure.
+- Downloaded models must be loaded only from trusted sources.
+
+## Roadmap — Future Enhancements
+
+- Dataset validation and feature exclusion
+- Batch prediction and downloadable prediction reports
+- Classification support
+- Hyperparameter optimization
+- Explainable AI with SHAP
+- Time-series-aware validation
+- Model tracking and versioning
+- Improved experiment management
+
+## Project Status
+
+**Version 1.0 — Initial regression dashboard release candidate**
+
+The core Streamlit workflow has been tested locally. Clean-environment installation and cloud deployment require final verification.
+
+## Author
+DataProjectHub
+
+Independent machine learning and AI development project by Pooja Anilkumar
+https://www.linkedin.com/in/pooja-a-8b678637/
